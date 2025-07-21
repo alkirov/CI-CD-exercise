@@ -1,0 +1,40 @@
+# This workflow installs dependencies, starts the server, and runs tests on Node.js 18.x
+
+name: Student Registry CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-student-registry:
+    name: Test Student Registry App
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start the server
+        run: npm start &
+        
+      - name: Wait for server to start
+        run: sleep 5
+
+      - name: Run tests
+        run: npm test

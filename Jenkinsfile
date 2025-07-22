@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 24.4.1' // Make sure this matches the configured name in Jenkins
+        nodejs 'NodeJS 18.X'
     }
 
     stages {
@@ -20,7 +20,8 @@ pipeline {
 
         stage('Start Application') {
             steps {
-                sh 'npm run start &'
+                sh 'nohup npm run start &'
+                sleep 5 // Give the app time to start
             }
         }
 
@@ -34,7 +35,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            sh 'pkill node || true' // Clean up the app if it was started
+            sh 'pkill node || true'
         }
     }
 }

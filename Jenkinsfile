@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 24.4.1'
+        nodejs 'NodeJS 24.4.1' // Ensure this name matches Jenkins configuration
     }
 
     stages {
@@ -14,20 +14,20 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Start Application') {
             steps {
-                sh 'nohup npm run start &'
-                sleep 5 // Give the app time to start
+                bat 'start /b npm run start'
+                sleep 5 // wait a few seconds to allow app to boot
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                bat 'npm test'
             }
         }
     }
@@ -35,7 +35,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            sh 'pkill node || true'
+            bat 'taskkill /F /IM node.exe || exit 0'
         }
     }
 }
